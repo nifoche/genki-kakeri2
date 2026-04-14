@@ -8,42 +8,42 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-width: 350px;
-  min-height: 400px;
+  min-height: 300px;
   padding: 10px;
 }
 
 .container {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 18px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   color: #333;
-  font-size: 20px;
-  margin-bottom: 20px;
+  font-size: 18px;
+  margin-bottom: 14px;
   text-align: center;
   font-weight: 600;
 }
 
 h2 {
   color: #555;
-  font-size: 16px;
-  margin-bottom: 12px;
+  font-size: 14px;
+  margin-bottom: 8px;
   font-weight: 600;
 }
 
 h3 {
   color: #666;
-  font-size: 14px;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  font-size: 12px;
+  margin-top: 12px;
+  margin-bottom: 6px;
   font-weight: 500;
 }
 
 .input-group {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 label {
@@ -73,43 +73,53 @@ input[type="number"]:focus {
   width: 60% !important;
 }
 
+.narrow-input {
+  width: 50% !important;
+}
+
 .custom-input {
-  margin-top: 8px;
+  margin-top: 6px;
+  font-size: 12px;
+  padding: 8px 10px;
 }
 
 .rate-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
-.rate-btn {
+.rate-btn,
+.selling-rate-btn {
   flex: 0 1 auto;
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   background: white;
   color: #666;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  min-width: 60px;
+  min-width: 55px;
 }
 
-.rate-btn:hover {
+.rate-btn:hover,
+.selling-rate-btn:hover {
   background: #f0f0f0;
   border-color: #667eea;
 }
 
-.rate-btn.active {
+.rate-btn.active,
+.selling-rate-btn.active {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-color: #667eea;
 }
 
-.rate-btn:focus {
+.rate-btn:focus,
+.selling-rate-btn:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
@@ -133,16 +143,16 @@ input[type="number"]:focus {
 
 .button-group {
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 14px;
 }
 
 button {
   flex: 1;
-  padding: 10px 16px;
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -172,8 +182,9 @@ button {
 }
 
 .result {
-  margin-top: 20px;
-  padding: 16px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
   background: #f8f9fa;
   border-radius: 8px;
   border-left: 4px solid #667eea;
@@ -183,7 +194,36 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 6px 0;
+  gap: 8px;
+}
+
+.result-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.copy-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 0 0 auto;
+  min-width: 60px;
+}
+
+.copy-btn:hover {
+  background: #5568d3;
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
 }
 
 .result-label {
@@ -203,8 +243,8 @@ button {
 }
 
 .saved-settings {
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid #eee;
 }
 
