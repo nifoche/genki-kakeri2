@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "掛け率計算機 - Kakeri2",
+  "version": "1.0.0",
+  "description": "定価、掛け率、販売価格率を入力して自動計算するツール",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "掛け率計算機"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
