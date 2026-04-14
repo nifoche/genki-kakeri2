@@ -1,12 +1,14 @@
 // DOM要素
 const listPriceInput = document.getElementById('listPrice');
 const discountRateInput = document.getElementById('discountRate');
+const discountRateCustomInput = document.getElementById('discountRateCustom');
 const sellingRateInput = document.getElementById('sellingRate');
 const calculateBtn = document.getElementById('calculateBtn');
 const resetBtn = document.getElementById('resetBtn');
 const resultDiv = document.getElementById('result');
 const basePriceSpan = document.getElementById('basePrice');
 const sellingPriceSpan = document.getElementById('sellingPrice');
+const rateButtons = document.querySelectorAll('.rate-btn');
 
 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 const loadSettingsBtn = document.getElementById('loadSettingsBtn');
@@ -25,7 +27,7 @@ function calculate() {
   }
 
   if (isNaN(discountRate) || discountRate <= 0 || discountRate > 1) {
-    alert('掛け率を選択してください');
+    alert('掛け率を選択または入力してください');
     return;
   }
 
@@ -48,8 +50,8 @@ function calculate() {
   }
 
   // 計算
-  const basePrice = listPrice * discountRate;
-  const sellingPrice = basePrice * (sellingRate / 100);
+  const basePrice = listPrice * discountRate; // 仕入れ価格
+  const sellingPrice = listPrice * (sellingRate / 100); // 定価からのパーセンテージ
 
   // 結果を表示
   basePriceSpan.textContent = `¥${Math.round(basePrice).toLocaleString()}`;
@@ -61,15 +63,64 @@ function calculate() {
 function reset() {
   listPriceInput.value = '';
   discountRateInput.value = '';
+  discountRateCustomInput.value = '';
   sellingRateInput.value = '';
   resultDiv.style.display = 'none';
+
+  // ボタンのactive状態をリセット
+  rateButtons.forEach(btn => btn.classList.remove('active'));
 }
+
+// 掛け率ボタンのイベントリスナー
+rateButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const rate = button.getAttribute('data-rate');
+
+    // 全てのボタンのactive状態をリセット
+    rateButtons.forEach(btn => btn.classList.remove('active'));
+
+    // クリックされたボタンをactiveに
+    button.classList.add('active');
+
+    // 隠しinputに値を設定
+    discountRateInput.value = rate;
+
+    // 自由入力欄をクリア
+    discountRateCustomInput.value = '';
+
+    // 自動計算
+    if (listPriceInput.value && sellingRateInput.value) {
+      calculate();
+    }
+  });
+});
+
+// 自由入力欄のイベントリスナー
+discountRateCustomInput.addEventListener('input', () => {
+  const value = parseFloat(discountRateCustomInput.value);
+
+  // ボタンのactive状態をリセット
+  rateButtons.forEach(btn => btn.classList.remove('active'));
+
+  // 値を設定
+  if (!isNaN(value) && value > 0 && value <= 1) {
+    discountRateInput.value = value;
+
+    // 自動計算
+    if (listPriceInput.value && sellingRateInput.value) {
+      calculate();
+    }
+  } else {
+    discountRateInput.value = '';
+  }
+});
 
 // 設定を保存
 function saveSettings() {
   const settings = {
     listPrice: listPriceInput.value,
     discountRate: discountRateInput.value,
+    discountRateCustom: discountRateCustomInput.value,
     sellingRate: sellingRateInput.value
   };
 
@@ -84,8 +135,27 @@ function loadSettings() {
     if (result.kakeriSettings) {
       const settings = result.kakeriSettings;
       listPriceInput.value = settings.listPrice || '';
-      discountRateInput.value = settings.discountRate || '';
       sellingRateInput.value = settings.sellingRate || '';
+
+      // 掛け率の設定
+      if (settings.discountRateCustom) {
+        // 自由入力値が優先
+        discountRateCustomInput.value = settings.discountRateCustom;
+        discountRateInput.value = settings.discountRate;
+        rateButtons.forEach(btn => btn.classList.remove('active'));
+      } else if (settings.discountRate) {
+        // ボタン選択
+        discountRateInput.value = settings.discountRate;
+        discountRateCustomInput.value = '';
+        rateButtons.forEach(btn => {
+          if (btn.getAttribute('data-rate') === settings.discountRate) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+
       alert('設定を読み込みました');
     } else {
       alert('保存された設定がありません');
@@ -113,13 +183,11 @@ clearSettingsBtn.addEventListener('click', clearSettings);
 listPriceInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') calculate();
 });
-
-// select要素が変更されたら自動計算
-discountRateInput.addEventListener('change', () => {
-  if (listPriceInput.value && sellingRateInput.value) {
-    calculate();
-  }
+discountRateCustomInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') calculate();
 });
+
+// 販売価格率selectが変更されたら自動計算
 sellingRateInput.addEventListener('change', () => {
   if (listPriceInput.value && discountRateInput.value) {
     calculate();
@@ -131,7 +199,19 @@ chrome.storage.local.get(['kakeriSettings'], (result) => {
   if (result.kakeriSettings) {
     const settings = result.kakeriSettings;
     if (settings.listPrice) listPriceInput.value = settings.listPrice;
-    if (settings.discountRate) discountRateInput.value = settings.discountRate;
-    if (settings.sellingRate) sellingRateInput.value = settings.sellingRate;
+    sellingRateInput.value = settings.sellingRate || '';
+
+    // 掛け率の設定
+    if (settings.discountRateCustom) {
+      discountRateCustomInput.value = settings.discountRateCustom;
+      discountRateInput.value = settings.discountRate;
+    } else if (settings.discountRate) {
+      discountRateInput.value = settings.discountRate;
+      rateButtons.forEach(btn => {
+        if (btn.getAttribute('data-rate') === settings.discountRate) {
+          btn.classList.add('active');
+        }
+      });
+    }
   }
 });
