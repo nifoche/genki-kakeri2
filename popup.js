@@ -16,7 +16,7 @@ const clearSettingsBtn = document.getElementById('clearSettingsBtn');
 function calculate() {
   const listPrice = parseFloat(listPriceInput.value);
   const discountRate = parseFloat(discountRateInput.value);
-  const sellingRate = parseFloat(sellingRateInput.value);
+  const sellingRateValue = sellingRateInput.value;
 
   // 入力値のバリデーション
   if (isNaN(listPrice) || listPrice < 0) {
@@ -25,13 +25,26 @@ function calculate() {
   }
 
   if (isNaN(discountRate) || discountRate <= 0 || discountRate > 1) {
-    alert('掛け率は0より大きく1以下で入力してください');
+    alert('掛け率を選択してください');
     return;
   }
 
-  if (isNaN(sellingRate) || sellingRate <= 0 || sellingRate > 100) {
-    alert('販売価格率は0より大きく100以下で入力してください');
+  if (!sellingRateValue) {
+    alert('販売価格率を選択してください');
     return;
+  }
+
+  // 販売価格率を計算
+  let sellingRate;
+  if (sellingRateValue === 'plus5') {
+    // 掛け率 + 5%
+    sellingRate = (discountRate * 100) + 5;
+  } else if (sellingRateValue === 'plus10') {
+    // 掛け率 + 10%
+    sellingRate = (discountRate * 100) + 10;
+  } else {
+    // 固定値（70% または 80%）
+    sellingRate = parseFloat(sellingRateValue);
   }
 
   // 計算
@@ -40,7 +53,7 @@ function calculate() {
 
   // 結果を表示
   basePriceSpan.textContent = `¥${Math.round(basePrice).toLocaleString()}`;
-  sellingPriceSpan.textContent = `¥${Math.round(sellingPrice).toLocaleString()}`;
+  sellingPriceSpan.textContent = `¥${Math.round(sellingPrice).toLocaleString()} (${Math.round(sellingRate)}%)`;
   resultDiv.style.display = 'block';
 }
 
@@ -100,11 +113,17 @@ clearSettingsBtn.addEventListener('click', clearSettings);
 listPriceInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') calculate();
 });
-discountRateInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') calculate();
+
+// select要素が変更されたら自動計算
+discountRateInput.addEventListener('change', () => {
+  if (listPriceInput.value && sellingRateInput.value) {
+    calculate();
+  }
 });
-sellingRateInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') calculate();
+sellingRateInput.addEventListener('change', () => {
+  if (listPriceInput.value && discountRateInput.value) {
+    calculate();
+  }
 });
 
 // ページ読み込み時に設定を自動読み込み
