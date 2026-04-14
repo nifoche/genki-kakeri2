@@ -1,0 +1,14 @@
+{
+  "name": "kakeri2",
+  "version": "0.1.0",
+  "description": "Kakeri2 project",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'No dev script configured yet'",
+    "build": "echo 'No build script configured yet'",
+    "test": "echo 'No test script configured yet'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
